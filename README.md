@@ -12,13 +12,18 @@ Spielstart -> solver.findBestWord(), Ergebnis: arose      (immer console.log(sol
 angenommen a steht an der richtigen Stelle (also grün), r ist an der falschen Stelle aber im Wort (orange) und sonst sind alles Buchstaben nicht im Wort (grau):
 
 solver.addGreenLetter(0, "a");
+
 solver.addOrangeLetter(1,"r");
+
 solver.addGreyLetter("o");            (Reihenfolge beliebig; funktioniert auch, wenn man die Buchstaben in groß eingibt)
+
 solver.addGreyLetter("s");
+
 solver.addGreyLetter("e");
 
 Jetzt bestes Wort nach neuen Vorgaben -> solver.findBestWord(), Ergebnis: aural
 
 und so weiter
+
 
 
