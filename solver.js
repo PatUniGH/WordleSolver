@@ -15,7 +15,7 @@ export class WordleSolver {
         await this.putWordsIntoList();
     }
     async putWordsIntoList() {
-        const response = await fetch("test.txt");
+        const response = await fetch("5LetterWords.txt");
         if (!response.ok)
             throw new Error("Datei konnte nicht geladen werden");
         let text = await response.text();

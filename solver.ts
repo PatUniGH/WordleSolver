@@ -21,7 +21,7 @@ export class WordleSolver{
     }
 
     async putWordsIntoList(): Promise<void>{ //Liest 5-Wörter-Textdatei in Array words ein
-        const response = await fetch("test.txt");
+        const response = await fetch("5LetterWords.txt");
         if(!response.ok) throw new Error("Datei konnte nicht geladen werden");
         let text = await response.text();
         text = text.replace(/\s/g, "");
