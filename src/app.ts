@@ -1,4 +1,4 @@
-import { WordleSolver } from "./solver.js";
+import { WordleSolver } from "./solver";
 
 const runSolver = async() => {
     const solver = new WordleSolver();

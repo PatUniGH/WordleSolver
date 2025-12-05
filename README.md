@@ -1,30 +1,54 @@
-Die Steuerung des Programmes läuft über app.js innerhalb const runSolver, dabei gibt solver.findBestWord() immer das aktuelle beste Word aus, um das Wordle zu lösen.
+# WordleSolver
 
-Graue (also nicht vorhanden) Character/Buchstaben können über solver.addGreyLetter(char c) hinzugefügt werden.
+## Setup & Run
 
-Orangene (also an einer anderen Stelle vorhandene) Character/Buchstaben können über solver.addOrangeLetter(int position, char c) hinzugefügt werden, wobei Stelle 0 dem 1. Buchstaben und Stelle 4. dem 5. Buchstaben entspricht
+```bash
+# Install dependencies
+npm install
 
-Grüne Wörter (also an der richtigen Stelle vorhandene) Character/Buchstaben können mit solver.addGreenLetter(int position, char c) hinzugefügt werden, die Stellen sind analog zu dem orangenen Equivalent
+# Development server (with hot reload)
+npm run dev
 
-Beispieleingabe:
-Spielstart -> solver.findBestWord(), Ergebnis: arose      (immer console.log(solver.findBestWord()) nötig um das anzuzeigen)
+# Build for production
+npm run build
 
-angenommen a steht an der richtigen Stelle (also grün), r ist an der falschen Stelle aber im Wort (orange) und sonst sind alles Buchstaben nicht im Wort (grau):
+# Preview production build
+npm run preview
+```
 
+Development server runs on `http://localhost:8000`.
+
+## Usage
+
+The solver is controlled via `app.js` within `const runSolver`. `solver.findBestWord()` returns the current best word to solve the Wordle.
+
+**Grey letters** (not present in the word) can be added with `solver.addGreyLetter(char c)`.
+
+**Orange letters** (present but at wrong position) can be added with `solver.addOrangeLetter(int position, char c)`, where position 0 corresponds to the 1st letter and position 4 to the 5th letter.
+
+**Green letters** (correct position) can be added with `solver.addGreenLetter(int position, char c)`, using the same position numbering as orange letters.
+
+### Example
+
+At game start:
+```javascript
+solver.findBestWord()  // Result: "arose"
+// (always use console.log(solver.findBestWord()) to display the result)
+```
+
+After the first guess, assume:
+- `a` is in the correct position (green)
+- `r` is in the word but wrong position (orange)
+- `o`, `s`, `e` are not in the word (grey)
+
+```javascript
 solver.addGreenLetter(0, "a");
-
-solver.addOrangeLetter(1,"r");
-
-solver.addGreyLetter("o");            (Reihenfolge beliebig; funktioniert auch, wenn man die Buchstaben in groß eingibt)
-
+solver.addOrangeLetter(1, "r");
+solver.addGreyLetter("o");  // Order doesn't matter; also works with uppercase
 solver.addGreyLetter("s");
-
 solver.addGreyLetter("e");
 
-Jetzt bestes Wort nach neuen Vorgaben -> solver.findBestWord(), Ergebnis: aural
+solver.findBestWord()  // Result: "aural"
+```
 
-und so weiter
-
-
-
-
+Continue adding constraints and calling `findBestWord()` until solved.
