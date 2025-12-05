@@ -5,19 +5,23 @@ const runSolver = async() => {
     await solver.init();
     let bestWord = solver.findBestWord();
     console.log(bestWord);
-    solver.addGreenLetter(0, "a");
-    solver.addGreenLetter(3,"s");
-    solver.addGreenLetter(4, "e");
+    solver.addOrangeLetter(1, "n");
     solver.addGreyLetter("r");
     solver.addGreyLetter("o");
-    bestWord = solver.findBestWord();
-    console.log(bestWord);
-    solver.addGreyLetter("l");
-    solver.addGreyLetter("m");
-    solver.addOrangeLetter(2, "B");
-    solver.addOrangeLetter(3, "U");
+    solver.addGreyLetter("s");
+    solver.addGreyLetter("e");
+    solver.addGreyLetter("a");
+    solver.addGreyLetter("u");
+    solver.addGreyLetter("t");
+    solver.addGreyLetter("y");
+    solver.addGreyLetter("b");
+    solver.addGreenLetter(1,"l");
+    solver.addGreenLetter(2,"i");
+    solver.addGreenLetter(3,"n");
+    solver.addGreenLetter(4,"g");
     bestWord = solver.findBestWord();
     console.log(bestWord);
     
+
 }
 runSolver();
