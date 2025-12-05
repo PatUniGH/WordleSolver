@@ -1,6 +1,9 @@
-Die Steuerung des Programmes läuft über app.js innerhalb const runSolver, dabei gibt solver.findBestWord() immer das aktuelle beste Word aus, um das Wordle zu lösen
+Die Steuerung des Programmes läuft über app.js innerhalb const runSolver, dabei gibt solver.findBestWord() immer das aktuelle beste Word aus, um das Wordle zu lösen.
+
 Graue (also nicht vorhanden) Character/Buchstaben können über solver.addGreenLetter(char c) hinzugefügt werden.
+
 Orangene (also an einer anderen Stelle vorhandene) Character/Buchstaben können über solver.addOrangeLetter(int position, char c) hinzugefügt werden, wobei Stelle 0 dem 1. Buchstaben und Stelle 4. dem 5. Buchstaben entspricht
+
 Grüne Wörter (also an der richtigen Stelle vorhandene) Character/Buchstaben können mit solver.addGreenLetter(int position, char c) hinzugefügt werden, die Stellen sind analog zu dem orangenen Equivalent
 
 Beispieleingabe:
@@ -17,4 +20,5 @@ solver.addGreyLetter("e");
 Jetzt bestes Wort nach neuen Vorgaben -> solver.findBestWord(), Ergebnis: aural
 
 und so weiter
+
 
