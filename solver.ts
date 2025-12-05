@@ -27,7 +27,9 @@ export class WordleSolver{
         text = text.replace(/\s/g, "");
     
         for(let i=0; i<=text.length-5; i+=5){
-            this.words.push(text.substring(i,i+5));
+            if(!(this.words.includes(text.substring(i,i+5)))){
+                this.words.push(text.substring(i,i+5));
+            }
         }
     }
 
@@ -63,7 +65,7 @@ export class WordleSolver{
         let bestCurrentScore = 0;
         let bestCurrentWord = candidateWords[0];
         for(const s of this.words){//search for word that eliminates most words of candidates
-            let currentScore: number = 0;
+            let currentScore = 0;
             let uniqueLettersWord: Set<String> = new Set(s.split(""));
             
             for(const c of charFrequency.keys()){ 
@@ -76,13 +78,15 @@ export class WordleSolver{
                 bestCurrentWord = s;
             }
         }
-        let SEP = "::SEP::";
-        return bestCurrentWord + SEP
+        //let SEP = "::SEP::";
+        return bestCurrentWord //+ SEP
+                +"\n"
+                +"The word-candidates are: "
+                +candidateWords.toString() + "\n"
                 +"To eradicate the " + candidateWords.length
-                + " choices left, the word should contain the chars "
-                + charFrequency.keys()
-                + SEP
-                + candidateWords.toString();
+                + " choices left, the word should contain the chars: "
+                + Array.from(charFrequency.keys());
+                //+ SEP
         }
       }
       //"normal" algorithm only looks at acceptableWords and calculates score based on in how many words of acceptableWords its chars appear
@@ -90,13 +94,13 @@ export class WordleSolver{
       let maxScore = 0;
       for(let i = 0; i<5; i++){
         for(const s of candidateWords){
-            let c: string = s.charAt(i);
+            let c = s.charAt(i);
             const currentCount = (charFrequency.get(c) || 0) + 1;; //If Element isnt in charFrequency yet it should be inserted with count=1
             charFrequency.set(c, currentCount);             
         }
       }
       for(const s of candidateWords){
-        let currentScore: number = 0;
+        let currentScore = 0;
         let alreadyUsed = new Set<string>;
         for(let i = 0; i<5; i++){
             if(this.isValidChar(s.charAt(i))){//char is letter from A-Z or a-z
@@ -105,8 +109,8 @@ export class WordleSolver{
                 }
                 else{
                     currentScore += charFrequency.get(s.charAt(i)) || 0;
-                    alreadyUsed.add(s.toUpperCase());
-                    alreadyUsed.add(s.toLowerCase());
+                    alreadyUsed.add(s.charAt(i).toUpperCase());
+                    alreadyUsed.add(s.charAt(i).toLowerCase());
                 }
             } 
         }
@@ -180,7 +184,7 @@ export class WordleSolver{
 
     addGreenLetter(position: number, c: String) :void{
         this.greenLetters.set(position, c.toUpperCase());
-        this.greenLetters.set(position, c.toLowerCase());
+        this.greenLetters.set(position-100, c.toLowerCase());
     }
 
     addOrangeLetter(position: number, c: string) :void{
@@ -219,7 +223,7 @@ export class WordleSolver{
         if(this.greenLetters.size == 0){return true;}
         for(let i = 0; i<5; i++){
             const currentChar = s.charAt(i);
-            if(!this.greenLetters.get(i) == null){
+            if(!(this.greenLetters.get(i) == null)){
                 if(!(currentChar == this.greenLetters.get(i) || currentChar == this.greenLetters.get(i-100))){ //Lower-Case numbers are safed at i-100
                     return false; //char is different from green char at position
                 }

@@ -21,7 +21,9 @@ export class WordleSolver {
         let text = await response.text();
         text = text.replace(/\s/g, "");
         for (let i = 0; i <= text.length - 5; i += 5) {
-            this.words.push(text.substring(i, i + 5));
+            if (!(this.words.includes(text.substring(i, i + 5)))) {
+                this.words.push(text.substring(i, i + 5));
+            }
         }
     }
     assembleOrangeLettersMap() {
@@ -66,13 +68,15 @@ export class WordleSolver {
                         bestCurrentWord = s;
                     }
                 }
-                let SEP = "::SEP::";
-                return bestCurrentWord + SEP
+                //let SEP = "::SEP::";
+                return bestCurrentWord //+ SEP
+                    + "\n"
+                    + "The word-candidates are: "
+                    + candidateWords.toString() + "\n"
                     + "To eradicate the " + candidateWords.length
-                    + " choices left, the word should contain the chars "
-                    + charFrequency.keys()
-                    + SEP
-                    + candidateWords.toString();
+                    + " choices left, the word should contain the chars: "
+                    + Array.from(charFrequency.keys());
+                //+ SEP
             }
         }
         //"normal" algorithm only looks at acceptableWords and calculates score based on in how many words of acceptableWords its chars appear
@@ -96,8 +100,8 @@ export class WordleSolver {
                     }
                     else {
                         currentScore += charFrequency.get(s.charAt(i)) || 0;
-                        alreadyUsed.add(s.toUpperCase());
-                        alreadyUsed.add(s.toLowerCase());
+                        alreadyUsed.add(s.charAt(i).toUpperCase());
+                        alreadyUsed.add(s.charAt(i).toLowerCase());
                     }
                 }
             }
@@ -163,7 +167,7 @@ export class WordleSolver {
     }
     addGreenLetter(position, c) {
         this.greenLetters.set(position, c.toUpperCase());
-        this.greenLetters.set(position, c.toLowerCase());
+        this.greenLetters.set(position - 100, c.toLowerCase());
     }
     addOrangeLetter(position, c) {
         if (position == 0) {
@@ -201,7 +205,7 @@ export class WordleSolver {
         }
         for (let i = 0; i < 5; i++) {
             const currentChar = s.charAt(i);
-            if (!this.greenLetters.get(i) == null) {
+            if (!(this.greenLetters.get(i) == null)) {
                 if (!(currentChar == this.greenLetters.get(i) || currentChar == this.greenLetters.get(i - 100))) { //Lower-Case numbers are safed at i-100
                     return false; //char is different from green char at position
                 }
