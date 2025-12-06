@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wordle Solver Learning Demo</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1 class="title">Wordle Solver Learning Demo</h1>
+    <p class="text">Open the console to see the output.</p>
+    <p class="text">
+      The solver is controlled via `app.js` within `const runSolver`.
+      `solver.findBestWord()` returns the current best word to solve the Wordle.
+    </p>
+    <ol class="instructions-list">
+      <li class="instruction-item">
+        <strong>Grey letters</strong> (not present in the word) can be added
+        with <code>solver.addGreyLetter(char c)</code>.
+      </li>
+      <li class="instruction-item">
+        <strong>Orange letters</strong> (present but at wrong position) can be
+        added with <code>solver.addOrangeLetter(int position, char c)</code>,
+        where position 0 corresponds to the 1st letter and position 4 to the 5th
+        letter.
+      </li>
+      <li class="instruction-item">
+        <strong>Green letters</strong> (correct position) can be added with
+        <code>solver.addGreenLetter(int position, char c)</code>, using the same
+        position numbering as orange letters.
+      </li>
+    </ol>
+    <script type="module" src="./app.ts"></script>
+  </body>
+</html>
