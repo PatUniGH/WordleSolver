@@ -33,7 +33,6 @@ The solver is controlled via `app.js` within `const runSolver`. `solver.findBest
 At game start:
 ```javascript
 solver.findBestWord()  // Result: "arose"
-// (always use console.log(solver.findBestWord()) to display the result)
 ```
 
 After the first guess, assume:
