@@ -1,3 +1,5 @@
+import wordsFromTxt from "./5LetterWords";
+
 export class WordleSolver{
 
     greenLetters: Map<number, string> = new Map();
@@ -13,10 +15,11 @@ export class WordleSolver{
 
 
     constructor(){
+        this.words = [...wordsFromTxt];
         this.assembleOrangeLettersMap();
     }
 
-    async init(): Promise<void>{
+    /*async init(): Promise<void>{
         await this.putWordsIntoList();
     }
 
@@ -31,7 +34,7 @@ export class WordleSolver{
                 this.words.push(text.substring(i,i+5));
             }
         }
-    }
+    }*/
 
     assembleOrangeLettersMap(): void{
         this.orangeLetters.set(0, this.position0List);

@@ -1,11 +1,10 @@
 import { WordleSolver } from "./solver";
 
-const runSolver = async() => {
+const runSolver = function(){
     const solver = new WordleSolver();
-    await solver.init();
     let bestWord = solver.findBestWord();
     console.log(bestWord);
-    solver.addOrangeLetter(1, "n");
+    /*solver.addOrangeLetter(1, "n");
     solver.addGreyLetter("r");
     solver.addGreyLetter("o");
     solver.addGreyLetter("s");
@@ -20,7 +19,7 @@ const runSolver = async() => {
     solver.addGreenLetter(3,"n");
     solver.addGreenLetter(4,"g");
     bestWord = solver.findBestWord();
-    console.log(bestWord);
+    console.log(bestWord);*/
     
 
 }
