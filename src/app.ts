@@ -23,4 +23,18 @@ const runSolver = function(){
     
 
 }
+
+const wordleInput = document.querySelector(".wordle-input") as HTMLInputElement;
+const wordleButton = document.querySelector(".js-submit-button") as HTMLButtonElement;
+const bestWordButton = document.querySelector(".js-best-word-button") as HTMLButtonElement;
+const wordleList = document.querySelector(".js-wordle-list") as HTMLDivElement;
+
+wordleButton.addEventListener("click", () => {
+    console.log(wordleInput.value);
+    wordleList.innerHTML += `<div class="wordle-item">${wordleInput.value}</div>`;
+    wordleInput.value = "";
+});
+bestWordButton.addEventListener("click", () => {
+    console.log("Best Word");
+});
 runSolver();
