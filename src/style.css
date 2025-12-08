@@ -49,6 +49,10 @@ body {
     color: white;
 }
 
+.wordle-button-red{
+    background-color: #ff002f;
+}
+
 code {
     background-color: #f4f4f4;
     padding: 0.2em 0.4em;

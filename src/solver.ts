@@ -84,7 +84,7 @@ export class WordleSolver {
                 //let SEP = "::SEP::";
                 return bestCurrentWord //+ SEP
                     + "\n"
-                    + "The word-candidates are: "
+                    + "\nThe word-candidates are: "
                     + candidateWords.toString() + "\n"
                     + "To eradicate the " + candidateWords.length
                     + " choices left, the word should contain the chars: "
