@@ -28,7 +28,7 @@ export class WordleSolver {
         if(!response.ok) throw new Error("Datei konnte nicht geladen werden");
         let text = await response.text();
         text = text.replace(/\s/g, "");
-    
+
         for(let i=0; i<=text.length-5; i+=5){
             if(!(this.words.includes(text.substring(i,i+5)))){
                 this.words.push(text.substring(i,i+5));
@@ -81,14 +81,14 @@ export class WordleSolver {
                         bestCurrentWord = s;
                     }
                 }
-                //let SEP = "::SEP::";
-                return bestCurrentWord //+ SEP
-                    + "\n"
-                    + "\nThe word-candidates are: "
-                    + candidateWords.toString() + "\n"
+                let SEP = "::SEP::";
+                return "The word-candidates are: "+ candidateWords.toString() + SEP
                     + "To eradicate the " + candidateWords.length
                     + " choices left, the word should contain the chars: "
-                    + Array.from(charFrequency.keys());
+                    + Array.from(charFrequency.keys())
+                    + SEP
+                    + "So the best word is: " + SEP
+                    + bestCurrentWord;
                 //+ SEP
             }
         }
@@ -129,7 +129,7 @@ export class WordleSolver {
 
 
 
-    getCandidateWords(): string[] { //returns a list of all words that match the current criteria
+      getCandidateWords(): string[] { //returns a list of all words that match the current criteria
         let acceptableWords: string[] = [];
         for (const s of this.words) {
             if (!this.hasGreyLetters(s) && this.matchesGreenPatern(s) && this.matchesOrangePatterns(s)) {

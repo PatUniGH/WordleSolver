@@ -27,9 +27,6 @@ body {
     margin-bottom: 0.75rem;
 }
 
-.wordle-container {
-
-}
 
 .wordle-container {
     padding: 1rem;
@@ -38,7 +35,7 @@ body {
 
 .wordle-button {
     padding: 0.5rem 1rem;
-    bordeer: 0;
+    border: 0;
     font-weight: bold;
     background-color: #333333;
     color: white;
@@ -52,6 +49,11 @@ body {
 .wordle-button-red{
     background-color: #ff002f;
 }
+
+.wordle-list{
+    
+}
+
 
 code {
     background-color: #f4f4f4;

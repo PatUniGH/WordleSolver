@@ -34,15 +34,23 @@ submitButton.addEventListener("click", () => {
             solver.addGreenLetter(position-1, letter);
             wordleList.innerHTML += `<div class="wordle-item">${"Added " + "'" + letter + "'" + " to green letters"}</div>`;
         }
-        wordleInput.value = "";
     }
     else{
         wordleList.innerHTML += `<div class="wordle-item">${input + " is invalid"}</div>`;
-        wordleInput.value = "";
     }
+    wordleInput.value = "";
 });
 bestWordButton.addEventListener("click", () => {
-    wordleList.innerHTML += `<div class="wordle-item">${runSolver()}</div>`; //Hier unterscheiden, welche Ausgabe kommt, lange Ausgabe (Erklärung zu zu eliminierenden Chars hier formatieren, in solver.ts SEP-Zeichen einfügen)
+    wordleList.innerHTML = "";
+    let bestWordString = runSolver();
+    if(bestWordString.length != 5){//output is not only word but explanation of which word should be chosen
+        let output = bestWordString.split("::SEP::");
+        wordleList.innerHTML += `<div class="wordle-item">${output[0]}</div>`;
+        wordleList.innerHTML += `<div class="wordle-item">${output[1]}</div>`;
+        wordleList.innerHTML += `<div class="wordle-item">${output[2]} <span style ="color:green;">${output[3]}</span> </div>`;
+    }else{
+        wordleList.innerHTML += `<div class="wordle-item">${runSolver()}</div>`;
+    }
     wordleInput.value = "";
 });
 restartButton.addEventListener("click" , () => {
