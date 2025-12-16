@@ -19,23 +19,6 @@ export class WordleSolver {
         this.assembleOrangeLettersMap();
     }
 
-    /*async init(): Promise<void>{
-        await this.putWordsIntoList();
-    }
-
-    async putWordsIntoList(): Promise<void>{ //Liest 5-Wörter-Textdatei in Array words ein
-        const response = await fetch("5LetterWords.txt");
-        if(!response.ok) throw new Error("Datei konnte nicht geladen werden");
-        let text = await response.text();
-        text = text.replace(/\s/g, "");
-
-        for(let i=0; i<=text.length-5; i+=5){
-            if(!(this.words.includes(text.substring(i,i+5)))){
-                this.words.push(text.substring(i,i+5));
-            }
-        }
-    }*/
-
     assembleOrangeLettersMap(): void {
         this.orangeLetters.set(0, this.position0List);
         this.orangeLetters.set(1, this.position1List);
@@ -129,7 +112,7 @@ export class WordleSolver {
 
 
 
-      getCandidateWords(): string[] { //returns a list of all words that match the current criteria
+    getCandidateWords(): string[] { //returns a list of all words that match the current criteria
         let acceptableWords: string[] = [];
         for (const s of this.words) {
             if (!this.hasGreyLetters(s) && this.matchesGreenPatern(s) && this.matchesOrangePatterns(s)) {
@@ -260,6 +243,10 @@ export class WordleSolver {
             }
         }
         return true;
+    }
+
+    getRandomNumber(min: number, max: number):number {
+        return Math.floor(Math.random()*(max-min+1)) + min;
     }
 
 }

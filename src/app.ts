@@ -18,6 +18,23 @@ submitButton.addEventListener("click", () => {
     console.log(input);
 
     if(input.length == 1 && solver.isValidChar(input.charAt(0))){
+        /*Grey Letter
+        There can be a case where a word contains the letter 'a' two times, one time green and one time grey. If we just apply addGreyLetter like usual the word gets flagged as being invalid
+        because it contains a grey letter. The solution is to not add it as a grey letter but as an orange letter at a different position than the green letter
+        However, this doesnt quite work because we dont know the position at which the orange letter should be added, so there needs to be an extra input asking for the index for the grey letter
+        */
+        for(let i = 0; i<5; i++){
+            if(solver.greenLetters.get(i) == input.charAt(0) || solver.greenLetters.get(i-100) == input.charAt(0)){
+                //Word is entered as grey even though it exists as green
+                let indexForOrange = solver.getRandomNumber(0,4);
+                while(indexForOrange == i){
+                    indexForOrange = solver.getRandomNumber(0,4);
+                }
+                solver.addOrangeLetter(indexForOrange, input.charAt(0));
+                wordleInput.value = "";
+                return;
+            }
+        }
         solver.addGreyLetter(input.charAt(0));
         wordleList.innerHTML += `<div class="wordle-item">${"Added " + "'" + input.charAt(0) + "'" + " to grey letters"}</div>`;
     }
