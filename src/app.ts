@@ -17,6 +17,7 @@ const letter2Box = document.querySelector(".js-letter-box-2") as HTMLDivElement;
 const letter3Box = document.querySelector(".js-letter-box-3") as HTMLDivElement;
 const letter4Box = document.querySelector(".js-letter-box-4") as HTMLDivElement;
 const letter5Box = document.querySelector(".js-letter-box-5") as HTMLDivElement;
+const submitLettersButton = document.querySelector(".js-submit-boxes-button") as HTMLButtonElement;
 
 submitButton.addEventListener("click", () => {
     let input = wordleInput.value;
@@ -107,3 +108,53 @@ function addChangeColorOnClick(letterBox: HTMLDivElement) :void{
     }
 }
 
+submitLettersButton.addEventListener("click", () =>{
+    addLettersFromBoxes(); //Adds Letters from letterBox1-5 to the appropriate list in solver
+    addBestWord();         //Adds the new best word to the fields
+});
+
+function clearBoxes(){
+    letter1Box.innerHTML = "";
+    letter2Box.innerHTML = "";
+    letter3Box.innerHTML = "";
+    letter4Box.innerHTML = "";
+    letter5Box.innerHTML = "";
+}
+
+function addLettersFromBoxes():void {
+        const letterBoxes: HTMLDivElement[] = [letter1Box, letter2Box, letter3Box, letter4Box, letter5Box];
+    let i: number = 0;//Index of current Box
+    for(const currLetterBox of letterBoxes){
+        let currChar: string = currLetterBox.innerHTML;
+        if(!solver.isValidChar(currChar)){
+            clearBoxes();
+            return;
+        }
+        if(currLetterBox.classList.contains("green-letter")){
+            solver.addGreenLetter(i,currChar);
+        }
+        else if(currLetterBox.classList.contains("orange-letter")){
+            solver.addOrangeLetter(i, currChar);
+        }
+        else{
+            solver.addGreyLetter(currChar);
+        }
+        i++;
+    }
+}
+
+function addBestWord(){
+    //Check ob das Ergebnis wirklich nur 5 chars hat, evtl erklärung zu eliminierung der Kandidaten
+    let bestWord: string = solver.findBestWord();
+    if(bestWord.length != 5){
+
+    }
+    else{
+        letter1Box.innerHTML = bestWord.charAt(0);
+        letter2Box.innerHTML = bestWord.charAt(1);
+        letter3Box.innerHTML = bestWord.charAt(2);
+        letter4Box.innerHTML = bestWord.charAt(3);
+        letter5Box.innerHTML = bestWord.charAt(4);
+    }
+
+}
