@@ -12,6 +12,11 @@ const submitButton = document.querySelector(".js-submit-button") as HTMLButtonEl
 const bestWordButton = document.querySelector(".js-best-word-button") as HTMLButtonElement;
 const restartButton = document.querySelector(".wordle-button-red") as HTMLButtonElement;
 const wordleList = document.querySelector(".js-wordle-list") as HTMLDivElement;
+const letter1Box = document.querySelector(".js-letter-box-1") as HTMLDivElement;
+const letter2Box = document.querySelector(".js-letter-box-2") as HTMLDivElement;
+const letter3Box = document.querySelector(".js-letter-box-3") as HTMLDivElement;
+const letter4Box = document.querySelector(".js-letter-box-4") as HTMLDivElement;
+const letter5Box = document.querySelector(".js-letter-box-5") as HTMLDivElement;
 
 submitButton.addEventListener("click", () => {
     let input = wordleInput.value;
@@ -75,3 +80,30 @@ restartButton.addEventListener("click" , () => {
     wordleList.innerHTML = "";
     wordleInput.value = "";
 });
+letter1Box.addEventListener("click", () => addChangeColorOnClick(letter1Box));
+letter2Box.addEventListener("click", () => addChangeColorOnClick(letter2Box));
+letter3Box.addEventListener("click", () => addChangeColorOnClick(letter3Box));
+letter4Box.addEventListener("click", () => addChangeColorOnClick(letter4Box));
+letter5Box.addEventListener("click", () => addChangeColorOnClick(letter5Box));
+
+function addChangeColorOnClick(letterBox: HTMLDivElement) :void{
+        if(letterBox.classList.contains("grey-letter")){
+        letterBox.classList.toggle("grey-letter");
+        letterBox.classList.toggle("orange-letter");
+        return;
+    }
+    if(letterBox.classList.contains("orange-letter")){
+        letterBox.classList.toggle("orange-letter");
+        letterBox.classList.toggle("green-letter");
+        return;
+    }
+    else if(letterBox.classList.contains("green-letter")){
+        letterBox.classList.toggle("green-letter");
+        letterBox.classList.toggle("grey-letter");
+        return;
+    }
+    else{//is still undefined
+        letterBox.classList.toggle("grey-letter");
+    }
+}
+
