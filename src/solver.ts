@@ -49,7 +49,7 @@ export class WordleSolver {
                 }
                 //Calculate Score based on how often chars of word appear in the rest of candidateWords
                 let bestCurrentScore = 0;
-                let bestCurrentWord = candidateWords[0];
+                let bestCurrentWord = candidateWords[0] ?? ""; //Gute Lösung?
                 for (const s of this.words) {//search for word that eliminates most words of candidates
                     let currentScore = 0;
                     let uniqueLettersWord: Set<String> = new Set(s.split(""));
@@ -64,15 +64,14 @@ export class WordleSolver {
                         bestCurrentWord = s;
                     }
                 }
-                let SEP = "::SEP::";
-                return "The word-candidates are: "+ candidateWords.toString() + SEP
+                const explanationString = "The word-candidates are: "+ candidateWords.toString()
                     + "To eradicate the " + candidateWords.length
                     + " choices left, the word should contain the chars: "
                     + Array.from(charFrequency.keys())
-                    + SEP
-                    + "So the best word is: " + SEP
+                    + " So the best word is: "
                     + bestCurrentWord;
-                //+ SEP
+                console.log(explanationString);
+                return bestCurrentWord;
             }
         }
         //"normal" algorithm only looks at acceptableWords and calculates score based on in how many words of acceptableWords its chars appear
