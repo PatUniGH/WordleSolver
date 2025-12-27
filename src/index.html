@@ -33,11 +33,17 @@
 
     <section class="wordle-container">
       <h2 class="wordle-title">Wordle</h2>
-      <div class="js-wordle-list"></div>
-      <input type="input" class="wordle-input" placeholder="Enter your word">
-      <button class="wordle-button js-submit-button wordle-button-highlighted">Submit</button>
-      <button class = "wordle-button js-restart-button wordle-button-red">Restart</button>
-      <button class="wordle-button js-best-word-button"> Best Word</button>
+      <div class="letter-boxes js-letter-boxes">
+        <div class = "letter-box js-letter-box-1">A</div>
+        <div class = "letter-box js-letter-box-2">R</div>
+        <div class = "letter-box js-letter-box-3">O</div>
+        <div class = "letter-box js-letter-box-4">S</div>
+        <div class = "letter-box js-letter-box-5">E</div>
+      </div>
+      <div class= "wordle-buttons">
+        <button class = "wordle button js-submit-boxes-button">Submit Letters</button>
+        <button class = "wordle button js-reset-button">Reset</button>
+      </div>
     </section>
     <script type="module" src="./app.ts"></script>
   </body>

@@ -31,6 +31,24 @@ body {
 .wordle-container {
     padding: 1rem;
     border: 1px solid #ccc;
+    min-height: 500px;
+}
+
+.wordle-row{
+    display:flex;
+    gap: 1rem;
+}
+
+.letter-boxes{
+    display:flex;
+    gap: 0.5rem;
+}
+
+.wordle-buttons{
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 7rem;
 }
 
 .wordle-button {
@@ -50,8 +68,32 @@ body {
     background-color: #ff002f;
 }
 
-.wordle-list{
+.letter-box{
+    user-select: none;
+    font-size: 50px;
+    text-align: center;
+    min-width: 50px;
+    min-height: 50px;
+    border: 1px solid black;
+}
 
+.green-letter{
+    background-color: green;
+}
+
+.orange-letter{
+    background-color: orange;
+}
+
+.grey-letter{
+    background-color: grey;
+}
+
+.submit-boxes-button{
+    min-width: 25;
+    min-height: 25;
+    margin-left: 10px;
+    margin-top: 25px;
 }
 
 
@@ -64,3 +106,9 @@ code {
     font-weight: bold;
     color: #e83e8c;
 }
+
+box{
+    background-color: lightgray;
+    font-weight: 500;
+}
+
