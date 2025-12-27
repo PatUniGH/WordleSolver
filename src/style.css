@@ -31,6 +31,19 @@ body {
 .wordle-container {
     padding: 1rem;
     border: 1px solid #ccc;
+    min-height: 500px;
+}
+
+.letter-boxes{
+    display:flex;
+    gap: 0.5rem;
+}
+
+.wordle-buttons{
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 7rem;
 }
 
 .wordle-button {
@@ -57,8 +70,6 @@ body {
     min-width: 50px;
     min-height: 50px;
     border: 1px solid black;
-    margin-left: 15px;
-    float: left;
 }
 
 .green-letter{

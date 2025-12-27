@@ -2,15 +2,6 @@ import { WordleSolver } from "./solver";
 
  let solver = new WordleSolver();
 
-const runSolver = function(){
-    let bestWord = solver.findBestWord();
-    return bestWord;
-}
-
-const wordleInput = document.querySelector(".wordle-input") as HTMLInputElement;
-const submitButton = document.querySelector(".js-submit-button") as HTMLButtonElement;
-const bestWordButton = document.querySelector(".js-best-word-button") as HTMLButtonElement;
-const restartButton = document.querySelector(".wordle-button-red") as HTMLButtonElement;
 const wordleList = document.querySelector(".js-wordle-list") as HTMLDivElement;
 const letter1Box = document.querySelector(".js-letter-box-1") as HTMLDivElement;
 const letter2Box = document.querySelector(".js-letter-box-2") as HTMLDivElement;
@@ -18,74 +9,21 @@ const letter3Box = document.querySelector(".js-letter-box-3") as HTMLDivElement;
 const letter4Box = document.querySelector(".js-letter-box-4") as HTMLDivElement;
 const letter5Box = document.querySelector(".js-letter-box-5") as HTMLDivElement;
 const submitLettersButton = document.querySelector(".js-submit-boxes-button") as HTMLButtonElement;
+const resetButton = document.querySelector(".js-reset-button") as HTMLButtonElement;
 
-submitButton.addEventListener("click", () => {
-    let input = wordleInput.value;
-    console.log(input);
-
-    if(input.length == 1 && solver.isValidChar(input.charAt(0))){
-        /*Grey Letter
-        There can be a case where a word contains the letter 'a' two times, one time green and one time grey. If we just apply addGreyLetter like usual the word gets flagged as being invalid
-        because it contains a grey letter. The solution is to not add it as a grey letter but as an orange letter at a different position than the green letter
-        However, this doesnt quite work because we dont know the position at which the orange letter should be added, so there needs to be an extra input asking for the index for the grey letter
-        */
-        for(let i = 0; i<5; i++){
-            if(solver.greenLetters.get(i) == input.charAt(0) || solver.greenLetters.get(i-100) == input.charAt(0)){
-                //Word is entered as grey even though it exists as green
-                let indexForOrange = solver.getRandomNumber(0,4);
-                while(indexForOrange == i){
-                    indexForOrange = solver.getRandomNumber(0,4);
-                }
-                solver.addOrangeLetter(indexForOrange, input.charAt(0));
-                wordleInput.value = "";
-                return;
-            }
-        }
-        solver.addGreyLetter(input.charAt(0));
-        wordleList.innerHTML += `<div class="wordle-item">${"Added " + "'" + input.charAt(0) + "'" + " to grey letters"}</div>`;
-    }
-    else if(input.length == 3){
-        let type: string = input.charAt(0);
-        let position:number = parseInt(input.charAt(1));
-        let letter: string = input.charAt(2);
-
-        if(type == "o"){
-            solver.addOrangeLetter(position-1, letter);
-            wordleList.innerHTML += `<div class="wordle-item">${"Added " + "'" + letter + "'" + " to orange letters"}</div>`;
-        }
-        if(type == "g"){
-            solver.addGreenLetter(position-1, letter);
-            wordleList.innerHTML += `<div class="wordle-item">${"Added " + "'" + letter + "'" + " to green letters"}</div>`;
-        }
-    }
-    else{
-        wordleList.innerHTML += `<div class="wordle-item">${input + " is invalid"}</div>`;
-    }
-    wordleInput.value = "";
-});
-bestWordButton.addEventListener("click", () => {
-    wordleList.innerHTML = "";
-    let bestWordString = runSolver();
-    if(bestWordString.length != 5){//output is not only word but explanation of which word should be chosen
-        let output = bestWordString.split("::SEP::");
-        wordleList.innerHTML += `<div class="wordle-item">${output[0]}</div>`;
-        wordleList.innerHTML += `<div class="wordle-item">${output[1]}</div>`;
-        wordleList.innerHTML += `<div class="wordle-item">${output[2]} <span style ="color:green;">${output[3]}</span> </div>`;
-    }else{
-        wordleList.innerHTML += `<div class="wordle-item">${runSolver()}</div>`;
-    }
-    wordleInput.value = "";
-});
-restartButton.addEventListener("click" , () => {
-    solver = new WordleSolver;
-    wordleList.innerHTML = "";
-    wordleInput.value = "";
-});
 letter1Box.addEventListener("click", () => addChangeColorOnClick(letter1Box));
 letter2Box.addEventListener("click", () => addChangeColorOnClick(letter2Box));
 letter3Box.addEventListener("click", () => addChangeColorOnClick(letter3Box));
 letter4Box.addEventListener("click", () => addChangeColorOnClick(letter4Box));
 letter5Box.addEventListener("click", () => addChangeColorOnClick(letter5Box));
+submitLettersButton.addEventListener("click", () =>{
+    addLettersFromBoxes(); //Adds Letters from letterBox1-5 to the appropriate list in solver
+    addBestWord();         //Adds the new best word to the fields and sets their color to undefined
+});
+resetButton.addEventListener("click", () =>{
+    solver = new WordleSolver(); //Creates new Instance of solver deleting inputs so far
+    addBestWord();               //Adds the "starting-best-word" = arose to box
+});
 
 function addChangeColorOnClick(letterBox: HTMLDivElement) :void{
         if(letterBox.classList.contains("grey-letter")){
@@ -108,10 +46,7 @@ function addChangeColorOnClick(letterBox: HTMLDivElement) :void{
     }
 }
 
-submitLettersButton.addEventListener("click", () =>{
-    addLettersFromBoxes(); //Adds Letters from letterBox1-5 to the appropriate list in solver
-    addBestWord();         //Adds the new best word to the fields
-});
+
 
 function clearBoxes(){
     letter1Box.innerHTML = "";
@@ -122,7 +57,7 @@ function clearBoxes(){
 }
 
 function addLettersFromBoxes():void {
-        const letterBoxes: HTMLDivElement[] = [letter1Box, letter2Box, letter3Box, letter4Box, letter5Box];
+    const letterBoxes: HTMLDivElement[] = [letter1Box, letter2Box, letter3Box, letter4Box, letter5Box];
     let i: number = 0;//Index of current Box
     for(const currLetterBox of letterBoxes){
         let currChar: string = currLetterBox.innerHTML;
@@ -136,25 +71,46 @@ function addLettersFromBoxes():void {
         else if(currLetterBox.classList.contains("orange-letter")){
             solver.addOrangeLetter(i, currChar);
         }
-        else{
+        else if(currLetterBox.classList.contains("grey-letter")){
+            //Es kann sein, dass in der gleichen Eingabe ein Buchstabe einmal grün und einmal grau vorkommt, dann muss die graue Stelle nicht über solver.addOrangeLetter
+            //an der entsprechenden Stelle hinzugefügt werden
+            let j: number = 0; //index of letterBox
+            for(const curLetterBox of letterBoxes){
+                if(curLetterBox.innerHTML == currChar && curLetterBox.classList.contains("green-letter") && curLetterBox != currLetterBox){
+                    solver.addOrangeLetter(i, currChar);
+                    return;
+                }
+                j++;
+            }
             solver.addGreyLetter(currChar);
         }
         i++;
     }
 }
 
-function addBestWord(){
+function addBestWord(): void{
     //Check ob das Ergebnis wirklich nur 5 chars hat, evtl erklärung zu eliminierung der Kandidaten
     let bestWord: string = solver.findBestWord();
-    if(bestWord.length != 5){
-
+    if(bestWord.length != 5){//word wasnt found, resets game
+        window.alert("Word not found, game reset");
+        solver = new WordleSolver();
+        addBestWord();
     }
     else{
-        letter1Box.innerHTML = bestWord.charAt(0);
-        letter2Box.innerHTML = bestWord.charAt(1);
-        letter3Box.innerHTML = bestWord.charAt(2);
-        letter4Box.innerHTML = bestWord.charAt(3);
-        letter5Box.innerHTML = bestWord.charAt(4);
+        letter1Box.innerHTML = bestWord.charAt(0).toUpperCase();
+        letter2Box.innerHTML = bestWord.charAt(1).toUpperCase();
+        letter3Box.innerHTML = bestWord.charAt(2).toUpperCase();
+        letter4Box.innerHTML = bestWord.charAt(3).toUpperCase();
+        letter5Box.innerHTML = bestWord.charAt(4).toUpperCase();
+        removeTypeOfBoxes(); //Resets all letter types to undefined (White)
     }
+}
 
+function removeTypeOfBoxes(): void{
+    const letterBoxes: HTMLDivElement[] = [letter1Box, letter2Box, letter3Box, letter4Box, letter5Box];
+    for(const currLetterBox of letterBoxes){
+        currLetterBox.classList.remove("green-letter");
+        currLetterBox.classList.remove("grey-letter");
+        currLetterBox.classList.remove("orange-letter");
+    }
 }
