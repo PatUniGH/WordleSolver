@@ -34,6 +34,11 @@ body {
     min-height: 500px;
 }
 
+.wordle-row{
+    display:flex;
+    gap: 1rem;
+}
+
 .letter-boxes{
     display:flex;
     gap: 0.5rem;
@@ -101,3 +106,9 @@ code {
     font-weight: bold;
     color: #e83e8c;
 }
+
+box{
+    background-color: lightgray;
+    font-weight: 500;
+}
+
