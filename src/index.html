@@ -8,41 +8,36 @@
   </head>
   <body>
     <h1 class="title">Wordle Solver Learning Demo</h1>
-    <p class="text">Open the console to see the output.</p>
     <p class="text">
-      The solver is controlled via `app.js` within `const runSolver`.
-      `solver.findBestWord()` returns the current best word to solve the Wordle.
+      By Clicking on <box>Submit Letters</box> you will get the a new word that aligns with your
+      input so far and helps your solve todays Wordle!
     </p>
     <ol class="instructions-list">
       <li class="instruction-item">
-        <strong>Grey letters</strong> (not present in the word) can be added
-        with <code>solver.addGreyLetter(char c)</code>.
+        <span style="color:gray">Grey letters</span> can be marked by clicking on a letter-box <strong>once</strong>
       </li>
       <li class="instruction-item">
-        <strong>Orange letters</strong> (present but at wrong position) can be
-        added with <code>solver.addOrangeLetter(int position, char c)</code>,
-        where position 0 corresponds to the 1st letter and position 4 to the 5th
-        letter.
+        <span style="color:orange">Orange letters</span> can be marked by clicking on a letter-box <strong>twice</strong>
       </li>
       <li class="instruction-item">
-        <strong>Green letters</strong> (correct position) can be added with
-        <code>solver.addGreenLetter(int position, char c)</code>, using the same
-        position numbering as orange letters.
+        <span style="color:green">Green letters</span> can be marked by clicking on a letter-box <strong>three times</strong>
       </li>
     </ol>
 
     <section class="wordle-container">
       <h2 class="wordle-title">Wordle</h2>
-      <div class="letter-boxes js-letter-boxes">
-        <div class = "letter-box js-letter-box-1">A</div>
-        <div class = "letter-box js-letter-box-2">R</div>
-        <div class = "letter-box js-letter-box-3">O</div>
-        <div class = "letter-box js-letter-box-4">S</div>
-        <div class = "letter-box js-letter-box-5">E</div>
-      </div>
-      <div class= "wordle-buttons">
-        <button class = "wordle button js-submit-boxes-button">Submit Letters</button>
-        <button class = "wordle button js-reset-button">Reset</button>
+      <div class = "wordle-row">
+        <div class="letter-boxes js-letter-boxes">
+         <div class = "letter-box js-letter-box-1">A</div>
+         <div class = "letter-box js-letter-box-2">R</div>
+         <div class = "letter-box js-letter-box-3">O</div>
+         <div class = "letter-box js-letter-box-4">S</div>
+         <div class = "letter-box js-letter-box-5">E</div>
+        </div>
+        <div class= "wordle-buttons">
+          <button class = "wordle-button js-submit-letters-button">Submit Letters</button>
+          <button class = "wordle-button js-reset-button">Reset</button>
+        </div>
       </div>
     </section>
     <script type="module" src="./app.ts"></script>

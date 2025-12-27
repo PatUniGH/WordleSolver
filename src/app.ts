@@ -8,7 +8,7 @@ const letter2Box = document.querySelector(".js-letter-box-2") as HTMLDivElement;
 const letter3Box = document.querySelector(".js-letter-box-3") as HTMLDivElement;
 const letter4Box = document.querySelector(".js-letter-box-4") as HTMLDivElement;
 const letter5Box = document.querySelector(".js-letter-box-5") as HTMLDivElement;
-const submitLettersButton = document.querySelector(".js-submit-boxes-button") as HTMLButtonElement;
+const submitLettersButton = document.querySelector(".js-submit-letters-button") as HTMLButtonElement;
 const resetButton = document.querySelector(".js-reset-button") as HTMLButtonElement;
 
 letter1Box.addEventListener("click", () => addChangeColorOnClick(letter1Box));
