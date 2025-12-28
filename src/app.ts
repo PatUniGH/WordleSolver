@@ -14,7 +14,8 @@ for(let i = 0; i < 30; i++){
 }
 submitLettersButton.addEventListener("click", () =>{
     if(isGameWon()){
-        window.alert("Spiel gewonnen!");
+        const triesTillBeat = currentRow+1;
+        window.alert("Spiel in " + triesTillBeat+ " guesses gewonnen!");
         resetGame();
         return;
     }
