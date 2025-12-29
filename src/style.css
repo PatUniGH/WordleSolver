@@ -34,6 +34,7 @@ body {
     min-height: 500px;
 }
 
+<<<<<<< HEAD
 .wordle-row{
     display:flex;
     gap: 1rem;
@@ -42,6 +43,24 @@ body {
 .letter-boxes{
     display:flex;
     gap: 0.5rem;
+=======
+.wordle-grid{
+    display:inline-grid;
+    grid-template-columns: 75px 75px 75px 75px 75px;
+    grid-template-rows: 75px 75px 75px 75px 75px 75px;
+    border: 1px solid orange;
+}
+
+.letter-box{
+    user-select: none;
+    font-size: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 75px;
+    height: 75px;
+    border: 1px solid black;
+>>>>>>> temp-save
 }
 
 .wordle-buttons{
@@ -68,14 +87,7 @@ body {
     background-color: #ff002f;
 }
 
-.letter-box{
-    user-select: none;
-    font-size: 50px;
-    text-align: center;
-    min-width: 50px;
-    min-height: 50px;
-    border: 1px solid black;
-}
+
 
 .green-letter{
     background-color: green;
@@ -88,14 +100,6 @@ body {
 .grey-letter{
     background-color: grey;
 }
-
-.submit-boxes-button{
-    min-width: 25;
-    min-height: 25;
-    margin-left: 10px;
-    margin-top: 25px;
-}
-
 
 code {
     background-color: #f4f4f4;
