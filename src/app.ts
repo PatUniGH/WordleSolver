@@ -5,8 +5,8 @@ import { WordleSolver } from "./solver";
 
 
 const letterBoxes: HTMLDivElement[] = Array.from(document.querySelectorAll(".letter-box"));
-const submitLettersButton = document.querySelector(".js-submit-letters-button") as HTMLButtonElement;
-const resetButton = document.querySelector(".js-reset-button") as HTMLButtonElement;
+const submitLettersButton = document.querySelector(".js-submit-letters-button-solver") as HTMLButtonElement;
+const resetButton = document.querySelector(".js-reset-button-solver") as HTMLButtonElement;
 
 
 for(let i = 0; i < 30; i++){
