@@ -34,7 +34,7 @@ body {
     min-height: 500px;
 }
 
-.wordle-grit{
+.wordle-grid{
     display:inline-grid;
     grid-template-columns: 75px 75px 75px 75px 75px;
     grid-template-rows: 75px 75px 75px 75px 75px 75px;
