@@ -48,13 +48,15 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
+    box-sizing: border-box;
     width: 75px;
     height: 75px;
     border: 1px solid black;
 }
 
 .deactivated-box{
-    background-color: darkgray;
+    background-color: darkslategrey;
     pointer-events: none;
 }
 

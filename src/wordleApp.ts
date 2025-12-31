@@ -1,5 +1,6 @@
 import { Wordle } from "./wordle";
-
+//Bei Input () letterBoxes.forEach((box, idx) => {box.addEventListener('input', () => { } auf die nächste box wechseln und value durch value.toUpperCase() ersetzen
+//Target Word bei 5 grünen ausgeben
 let wordle = new Wordle();
 let currentRow = 0;
 
@@ -12,15 +13,17 @@ if(submitButton != null){
     submitButton.addEventListener("click", () => highlightFieldsWordle());
 }
 
+if(resetButton != null){
+    resetButton.addEventListener("click", () => resetGame());
+}
+
 function highlightFieldsSelectable(){
     for(let i = 0; i < letterBoxes.length; i++){
         if(i>= currentRow*5 && i<(currentRow+1)*5){
             letterBoxes[i]!.classList.remove("deactivated-box");
-            letterBoxes[i]!.readOnly = false;
         }
         else{
             letterBoxes[i]!.classList.add("deactivated-box");
-            letterBoxes[i]!.readOnly = true;
         }
     }
 }
@@ -40,12 +43,39 @@ function highlightFieldsWordle(): void{
             rowLetterBoxes[i]?.classList.add("orange-letter");
             rowLetterBoxes[i]?.classList.remove("green-letter");
         }
-        else{
+        else if(typesForBoxes[i] == "green"){
             rowLetterBoxes[i]?.classList.remove("grey-letter");
             rowLetterBoxes[i]?.classList.remove("orange-letter");
             rowLetterBoxes[i]?.classList.add("green-letter");
         }
-        currentRow++;
-        highlightFieldsSelectable();
+        else{
+            clearCurrRow();
+            return;
+        }
+    }
+    currentRow++;
+    highlightFieldsSelectable();
+}
+
+function resetGame(){
+    currentRow = 0;
+    clearHighlightingAll();
+    highlightFieldsSelectable();
+}
+
+function clearHighlightingAll(){
+    for(const currLetterBox of letterBoxes){
+        currLetterBox.classList.remove("grey-letter");
+        currLetterBox.classList.remove("orange-letter");
+        currLetterBox.classList.remove("green-letter");
+        currLetterBox.classList.remove("deactivated-box");
+        currLetterBox.value = "";
+    }
+}
+
+function clearCurrRow(){
+    const rowLetterBoxes: HTMLInputElement[] = letterBoxes.slice(currentRow*5, (currentRow+1)*5);
+    for(const currLetterBox of rowLetterBoxes){
+        currLetterBox.value = "";
     }
 }
