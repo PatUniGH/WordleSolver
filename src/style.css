@@ -53,6 +53,11 @@ body {
     border: 1px solid black;
 }
 
+.deactivated-box{
+    background-color: darkgray;
+    pointer-events: none;
+}
+
 .wordle-buttons{
   display: flex;
   flex-direction: column;
