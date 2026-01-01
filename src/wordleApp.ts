@@ -1,6 +1,5 @@
 import { Wordle } from "./wordle";
-//Bei Input () letterBoxes.forEach((box, idx) => {box.addEventListener('input', () => { } auf die nächste box wechseln und value durch value.toUpperCase() ersetzen
-//Wenn bei Input schon Inhalt drin -> nur neuen Char im Uppercase (sollte durch das oben auch funktionieren)
+
 //Target Word bei 5 grünen ausgeben (Z.58)
 
 let wordle = new Wordle();
@@ -9,6 +8,7 @@ let currentRow = 0;
 const submitButton = document.querySelector(".js-submit-letters-button-game") as HTMLButtonElement;
 const resetButton = document.querySelector(".js-reset-button-game") as HTMLButtonElement;
 const letterBoxes: HTMLInputElement[] = Array.from(document.querySelectorAll(".js-letter-box-game"));
+const targetWordBox: HTMLDivElement = document.querySelector(".target-word-box") as HTMLDivElement;
 highlightFieldsSelectable();
 
 if(submitButton != null){
@@ -18,6 +18,15 @@ if(submitButton != null){
 if(resetButton != null){
     resetButton.addEventListener("click", () => resetGame());
 }
+
+letterBoxes.forEach((box: HTMLInputElement, id: number) => {
+    box.addEventListener("input", () => {
+        box.value = box.value.toUpperCase().slice(-1);
+        if(id < letterBoxes.length-1 && id < (currentRow+1)*5-1){
+            letterBoxes[id+1]!.focus();
+        }
+    })
+});
 
 function highlightFieldsSelectable(){
     for(let i = 0; i < letterBoxes.length; i++){
@@ -61,13 +70,19 @@ function highlightFieldsWordle(): void{
             rowLetterBoxes[i]?.classList.add("green-letter");
         }
     }
-    //if (isGameWon){nochNichtErstelleTextBox.value = wordle.getTargetWord()}, wordle = new Wordle(); (neues Wort)
+    if (isGameWon()){
+        targetWordBox.innerHTML = targetWordBox.innerHTML + wordle.getTargetWord();
+        targetWordBox.classList.remove("hidden-element");
+        return;
+    }
     currentRow++;
     highlightFieldsSelectable();
+    letterBoxes[currentRow*5]?.focus();
 }
 
 function resetGame(){
     currentRow = 0;
+    targetWordBox.classList.add("hidden-element");
     clearHighlightingAll();
     highlightFieldsSelectable();
 }
@@ -87,4 +102,14 @@ function clearCurrRow(){
     for(const currLetterBox of rowLetterBoxes){
         currLetterBox.value = "";
     }
+}
+
+function isGameWon(){
+    const rowLetterBoxes: HTMLInputElement[] = letterBoxes.slice(currentRow*5, (currentRow+1)*5);
+    for(const currLetterBox of rowLetterBoxes){
+        if(!currLetterBox.classList.contains("green-letter")){
+            return false;
+        }
+    }
+    return true;
 }

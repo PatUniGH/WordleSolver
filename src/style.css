@@ -108,6 +108,16 @@ code {
     font-weight: bold;
     color: #e83e8c;
 }
+.target-word-box{
+    text-align: left;
+    font-weight: bold;
+    font-size: 1.5em;
+    color: green;
+}
+
+.hidden-element{
+    visibility: hidden;
+}
 
 box{
     background-color: lightgray;
