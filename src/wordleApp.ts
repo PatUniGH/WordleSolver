@@ -1,6 +1,8 @@
 import { Wordle } from "./wordle";
 //Bei Input () letterBoxes.forEach((box, idx) => {box.addEventListener('input', () => { } auf die nächste box wechseln und value durch value.toUpperCase() ersetzen
-//Target Word bei 5 grünen ausgeben
+//Wenn bei Input schon Inhalt drin -> nur neuen Char im Uppercase (sollte durch das oben auch funktionieren)
+//Target Word bei 5 grünen ausgeben (Z.58)
+
 let wordle = new Wordle();
 let currentRow = 0;
 
@@ -31,7 +33,17 @@ function highlightFieldsSelectable(){
 
 function highlightFieldsWordle(): void{
     const rowLetterBoxes: HTMLInputElement[] = letterBoxes.slice(currentRow*5, (currentRow+1)*5);
-    const typesForBoxes :String[] = wordle.getTypeForInputs(rowLetterBoxes.map(box => box.value).join(""));
+    let typesForBoxes: string[] = [];
+
+    try{
+        typesForBoxes = wordle.getTypeForInputs(rowLetterBoxes.map(box => box.value).join(""));
+    }
+    catch(error){
+        clearCurrRow();
+        //rowLetterBoxes.forEach(classList.add(kurzeAnimationInDerBoxenRotAufleuchten))
+        return;
+    }
+
     for(let i = 0; i<5; i++){
         if(typesForBoxes[i] == "grey"){
             rowLetterBoxes[i]?.classList.add("grey-letter");
@@ -48,11 +60,8 @@ function highlightFieldsWordle(): void{
             rowLetterBoxes[i]?.classList.remove("orange-letter");
             rowLetterBoxes[i]?.classList.add("green-letter");
         }
-        else{
-            clearCurrRow();
-            return;
-        }
     }
+    //if (isGameWon){nochNichtErstelleTextBox.value = wordle.getTargetWord()}, wordle = new Wordle(); (neues Wort)
     currentRow++;
     highlightFieldsSelectable();
 }

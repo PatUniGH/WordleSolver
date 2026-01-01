@@ -18,6 +18,10 @@ export class Wordle {
         let types = ["", "", "", "", ""]; //Array of types for each letter
         let targetLetters = this.targetWord.toLowerCase().split('');
 
+        if(input.length != 5){
+            throw new Error("Invalid character in input");
+        }
+
         // First pass: mark all green letters and remove them from available letters
         for(let i = 0; i < input.length; i++) {
             const currChar = input.charAt(i).toLowerCase();
@@ -56,6 +60,10 @@ export class Wordle {
     isValidChar(c: String): boolean { //Checks if a character is valid (A-Z or a-z)
         const asciiValue = c.charCodeAt(0);
         return (asciiValue >= 65 && asciiValue <= 90) || (asciiValue >= 97 && asciiValue <= 122);
+    }
+
+    getTargetWord(): string{
+        return this.targetWord;
     }
 }
 
