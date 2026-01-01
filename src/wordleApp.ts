@@ -1,6 +1,7 @@
 import { Wordle } from "./wordle";
 
-//Target Word bei 5 grünen ausgeben (Z.58)
+//ToDo: Add Button "play-game" and textField "how often: x" that plays the game x times and saves data (which word, in how many tries)
+//Rough Code (another class?): schreibe wort von 1. Reihe von WordleSolver in WordleGame, schreibe das Ergebnis mit Typen in WordleSolver, wiederhole bis spiel Gewonnen in WordleGame
 
 let wordle = new Wordle();
 let currentRow = 0;
@@ -49,7 +50,11 @@ function highlightFieldsWordle(): void{
     }
     catch(error){
         clearCurrRow();
-        //rowLetterBoxes.forEach(classList.add(kurzeAnimationInDerBoxenRotAufleuchten))
+        rowLetterBoxes.forEach((box: HTMLInputElement) => {
+            box.classList.remove("blink-red");
+            box.offsetWidth;
+            box.classList.add("blink-red");
+        });
         return;
     }
 

@@ -115,6 +115,25 @@ code {
     color: green;
 }
 
+.blink-red{
+    animation: blink-red-animation 1.75s;
+}
+@keyframes blink-red-animation{
+    0%{
+        border-color: transparent;
+    }
+    25%{
+        border-color: red;
+    }
+    50%{
+        border-color: transparent;
+    }
+    100%{
+        border-color: red;
+    }
+}
+
+
 .hidden-element{
     visibility: hidden;
 }
