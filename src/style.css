@@ -74,6 +74,7 @@ body {
     font-weight: bold;
     background-color: #333333;
     color: white;
+    margin-bottom: 20px;
 }
 
 .wordle-button-highlighted {

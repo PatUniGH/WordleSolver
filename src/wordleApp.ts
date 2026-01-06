@@ -3,7 +3,7 @@ import { Wordle } from "./wordle";
 //ToDo: Add Button "play-game" and textField "how often: x" that plays the game x times and saves data (which word, in how many tries)
 //Rough Code (another class?): schreibe wort von 1. Reihe von WordleSolver in WordleGame, schreibe das Ergebnis mit Typen in WordleSolver, wiederhole bis spiel Gewonnen in WordleGame
 
-let wordle = new Wordle();
+let wordle = new Wordle(""); //Bei Bedarf hier beliebiges targetWord eingeben
 let currentRow = 0;
 
 const submitButton = document.querySelector(".js-submit-letters-button-game") as HTMLButtonElement;
@@ -38,6 +38,30 @@ function highlightFieldsSelectable(){
             letterBoxes[i]!.classList.add("deactivated-box");
         }
     }
+}
+
+export function updateUIWordle() : void{
+    const rowLetterBoxes: HTMLInputElement[] = letterBoxes.slice(currentRow*5, (currentRow+1)*5);
+    let typesForBoxes: string[] = wordle.getTypeForInputs(rowLetterBoxes.map(box => box.value).join(""));
+        for(let i = 0; i<5; i++){
+        if(typesForBoxes[i] == "grey"){
+            rowLetterBoxes[i]?.classList.add("grey-letter");
+            rowLetterBoxes[i]?.classList.remove("orange-letter");
+            rowLetterBoxes[i]?.classList.remove("green-letter");
+        }
+        else if(typesForBoxes[i] == "orange"){
+            rowLetterBoxes[i]?.classList.remove("grey-letter");
+            rowLetterBoxes[i]?.classList.add("orange-letter");
+            rowLetterBoxes[i]?.classList.remove("green-letter");
+        }
+        else if(typesForBoxes[i] == "green"){
+            rowLetterBoxes[i]?.classList.remove("grey-letter");
+            rowLetterBoxes[i]?.classList.remove("orange-letter");
+            rowLetterBoxes[i]?.classList.add("green-letter");
+        }
+    }
+    currentRow++;
+    highlightFieldsSelectable();
 }
 
 
@@ -85,7 +109,8 @@ function highlightFieldsWordle(): void{
     letterBoxes[currentRow*5]?.focus();
 }
 
-function resetGame(){
+export function resetGame(){
+    wordle = new Wordle("");
     currentRow = 0;
     targetWordBox.classList.add("hidden-element");
     clearHighlightingAll();
@@ -109,7 +134,7 @@ function clearCurrRow(){
     }
 }
 
-function isGameWon(){
+export function isGameWon(){
     const rowLetterBoxes: HTMLInputElement[] = letterBoxes.slice(currentRow*5, (currentRow+1)*5);
     for(const currLetterBox of rowLetterBoxes){
         if(!currLetterBox.classList.contains("green-letter")){
@@ -118,3 +143,6 @@ function isGameWon(){
     }
     return true;
 }
+
+
+

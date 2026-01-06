@@ -4,7 +4,7 @@ import { WordleSolver } from "./solver";
  let currentRow: number = 0; //Tracks in which row words should be inserted in
 
 
-const letterBoxes: HTMLDivElement[] = Array.from(document.querySelectorAll(".letter-box"));
+const letterBoxes: HTMLDivElement[] = Array.from(document.querySelectorAll(".js-letter-box-solver"));
 const submitLettersButton = document.querySelector(".js-submit-letters-button-solver") as HTMLButtonElement;
 const resetButton = document.querySelector(".js-reset-button-solver") as HTMLButtonElement;
 
@@ -16,7 +16,7 @@ submitLettersButton.addEventListener("click", () =>{
     if(isGameWon()){
         const triesTillBeat = currentRow+1;
         window.alert("Spiel in " + triesTillBeat+ " guesses gewonnen!");
-        resetGame();
+        resetGameSolver();
         return;
     }
     addLettersFromBoxes(); //Adds Letters from letterBox1-5 to the appropriate list in solver
@@ -27,12 +27,20 @@ submitLettersButton.addEventListener("click", () =>{
     }
     catch(err){
         window.alert("Word not found, game reset");
-        resetGame();
+        resetGameSolver();
     }
 });
 resetButton.addEventListener("click", () =>{
-    resetGame();
+    resetGameSolver();
 });
+
+
+export function updateUISolver(): void{
+        addLettersFromBoxes(); //Adds Letters from letterBox1-5 to the appropriate list in solver
+        addBestWord(currentRow+1);         //Adds the new best word to the fields and sets their color to undefined
+        currentRow++;
+}
+
 
 function addChangeColorOnClick(letterBox: HTMLDivElement, textBoxNumber: number) :void{
     if(textBoxNumber >= currentRow*5 && textBoxNumber <= (currentRow+1)*5 -1){
@@ -118,14 +126,14 @@ function removeTypeOfBoxes(startingIndex:number, endingIndex:number): void{
     }
 }
 
-function resetGame(): void{
+export function resetGameSolver(): void{
     solver = new WordleSolver();
     clearBoxes();//clearsletters and types from boxes
     currentRow = 0;
     addBestWord(currentRow);
 }
 
-function isGameWon():boolean{
+export function isGameWon():boolean{
     const rowLetterBoxes: HTMLDivElement[] = letterBoxes.slice(currentRow*5, (currentRow+1)*5);
     for(const currLetterBox of rowLetterBoxes){
         if(!currLetterBox.classList.contains("green-letter")){

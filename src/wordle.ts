@@ -5,12 +5,18 @@ export class Wordle {
     words: string[] = [];
     targetWord: string = "";
 
-    constructor() {
+    constructor(targetWord: string) {
         this.words = [...fiveLetterWords]
-        this.targetWord = this.words[this.getRandomNumber(0, this.words.length - 1)] || "";
+        if(targetWord != "" && (fiveLetterWords.includes(targetWord.toUpperCase()) || fiveLetterWords.includes(targetWord.toLocaleLowerCase()))){
+            this.targetWord = targetWord;
+        }
+        else{
+            this.targetWord = this.words[this.getRandomNumber(0, this.words.length - 1)] || "";
+        }
     }
 
-    getRandomNumber(min: number, max: number): number {
+
+    private getRandomNumber(min: number, max: number): number {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
@@ -57,7 +63,7 @@ export class Wordle {
         return types;
     }
 
-    isValidChar(c: String): boolean { //Checks if a character is valid (A-Z or a-z)
+    private isValidChar(c: String): boolean { //Checks if a character is valid (A-Z or a-z)
         const asciiValue = c.charCodeAt(0);
         return (asciiValue >= 65 && asciiValue <= 90) || (asciiValue >= 97 && asciiValue <= 122);
     }
