@@ -1,84 +1,97 @@
-import { updateUIWordle, resetGame} from "./wordleApp";
-import { updateUISolver, resetGameSolver} from "./app";
+import {WordleGameUI} from "./wordleGameUI";
+import { WordleSolverUI } from "./WordleSolverUI";
 
-let currentRowSolver = 0;
-let currentRowGame = 0;
+export class AutomaticWordleSolver{
 
-const letterBoxesGame: HTMLInputElement[] = Array.from(document.querySelectorAll(".js-letter-box-game"));
-const letterBoxesSolver: HTMLDivElement[] = Array.from(document.querySelectorAll(".js-letter-box-solver"));
-const automaticGameButton = document.querySelector(".js-automatic-game-button") as HTMLButtonElement;
+    private gameUI: WordleGameUI;
+    private solverUI: WordleSolverUI;
+    private autoGameButton: HTMLButtonElement;
 
-automaticGameButton.addEventListener("click", () => playAutomaticGame());
-
-async function playAutomaticGame(){
-    const rowBoxesGame = getRowLetterBoxesGame();
-    const rowBoxesSolver = getRowLetterBoxesSolver();
-
-    //copy solver word into game inputs
-    for(let i = 0; i<5; i++){
-        rowBoxesGame[i]!.value = rowBoxesSolver[i]!.innerHTML;
+    constructor(gameUI: WordleGameUI, solverUI: WordleSolverUI){
+        this.gameUI = gameUI;
+        this.solverUI = solverUI;
+        this.autoGameButton = document.querySelector(".js-automatic-game-button") as HTMLButtonElement;
+        this.initListeners();
     }
-    await sleep(150);
-    updateUIWordle(); //Puts Grey/Orange/Green on UI in Game
-    await sleep(150);
 
-    if(isGameWon(rowBoxesGame)){
-        const score = currentRowGame+1;
-        window.alert("Wordle Solved in " + score + " tries");
-        resetAutomaticGame();
-        return;
+    private initListeners(){
+        this.autoGameButton.addEventListener("click", async() => await this.playAutomaticGame());
     }
-   await sleep(150);
 
+    async playAutomaticGame(){
+        this.autoGameButton.classList.add("deactivated-box");
+        while(true){
+            const rowBoxesGame = this.gameUI.getCurrentRowBoxes();
+            const rowBoxesSolver = this.solverUI.getCurrentRowBoxes();
 
-    //mirror types into ui
-    for(let i = 0; i<5; i++){
-        if(rowBoxesGame[i]!.classList.contains("grey-letter")){
-            rowBoxesSolver[i]!.classList.add("grey-letter");
-            rowBoxesSolver[i]!.innerHTML = rowBoxesGame[i]!.value;
+            //copy solver word into game inputs
+            for(let i = 0; i<5; i++){
+                rowBoxesGame[i]!.value = rowBoxesSolver[i]!.innerHTML;
             }
-        else if(rowBoxesGame[i]!.classList.contains("orange-letter")){
-            rowBoxesSolver[i]!.classList.add("orange-letter");
-            rowBoxesSolver[i]!.innerHTML = rowBoxesGame[i]!.value;
-        }
-        else if(rowBoxesGame[i]!.classList.contains("green-letter")){
-            rowBoxesSolver[i]!.classList.add("green-letter");
-            rowBoxesSolver[i]!.innerHTML = rowBoxesGame[i]!.value;
+            await this.sleep(300);
+            this.gameUI.updateUIWordle(); //Puts Grey/Orange/Green on UI in Game
+            await this.sleep(300);
+
+            if(this.gameUI.isGameWon()){
+                this.autoGameButton.classList.remove("deactivated-box");
+                const score = this.gameUI.getCurrentRow()+1;
+                window.alert("Game won in " + score + " tries");
+                this.resetAutomaticGame();
+                return;                     //Add Code here when game is won
+            }
+
+            //mirror types into ui
+            for(let i = 0; i<5; i++){
+                if(rowBoxesGame[i]!.classList.contains("grey-letter")){
+                    rowBoxesSolver[i]!.classList.add("grey-letter");
+                    rowBoxesSolver[i]!.innerHTML = rowBoxesGame[i]!.value;
+                    }
+                else if(rowBoxesGame[i]!.classList.contains("orange-letter")){
+                    rowBoxesSolver[i]!.classList.add("orange-letter");
+                    rowBoxesSolver[i]!.innerHTML = rowBoxesGame[i]!.value;
+                }
+                else if(rowBoxesGame[i]!.classList.contains("green-letter")){
+                    rowBoxesSolver[i]!.classList.add("green-letter");
+                    rowBoxesSolver[i]!.innerHTML = rowBoxesGame[i]!.value;
+                }
+            }
+            //update solver
+            await this.sleep(300);
+            this.solverUI.updateUISolver();
+            await this.sleep(300);
+
+            //increase rows
+            this.gameUI.increaseCurrentRow();
+            this.solverUI.increaseCurrentRow();
         }
     }
-    await sleep(150);
-    updateUISolver();
-    await sleep(150);
-    currentRowGame++;
-    currentRowSolver++;
 
-    playAutomaticGame();
-}
 
-function getRowLetterBoxesGame(): HTMLInputElement[]{
-    return letterBoxesGame.slice(currentRowGame*5, (currentRowGame+1)*5);
-}
 
-function getRowLetterBoxesSolver(): HTMLDivElement[]{
-    return letterBoxesSolver.slice(currentRowSolver*5, (currentRowSolver+1)*5);
-}
 
-function sleep(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function isGameWon(rowBoxesGame: HTMLInputElement[]):boolean{
-    for(const currBox of rowBoxesGame){
-        if(!currBox.classList.contains("green-letter")){
-            return false;
-        }
+    private sleep(ms: number) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
-    return true;
+
+
+    private resetAutomaticGame(){
+        this.gameUI.resetGame();
+        this.solverUI.resetGameSolver();
+    }
+
 }
 
-function resetAutomaticGame(){
-    resetGame();
-    resetGameSolver();
-    currentRowGame = 0;
-    currentRowSolver = 0;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
