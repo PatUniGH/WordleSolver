@@ -11,11 +11,13 @@ export class WordleSolver {
     position2List: string[] = [];
     position3List: string[] = [];
     position4List: string[] = [];
+    candidateWords: string[];
 
 
 
     constructor() {
         this.words = [...fiveLetterWords];
+        this.candidateWords = this.words;
         this.assembleOrangeLettersMap();
     }
 
@@ -30,17 +32,16 @@ export class WordleSolver {
     findBestWord(): string {//returns the best word for solving the wordle considering current criteria
 
         let bestString = "";
-        const candidateWords = this.getCandidateWords();
+        this.setCandidateWords();
 
         //If there are more than 2 candidate words that all are either only different by 1 or 2 chars, its strategically better to guess a word that isnt a cadidate but eliminates the max. number of candidates
-        if (candidateWords.length > 2) {
+        if (this.candidateWords.length > 2) {
             let charFrequency: Map<string, number> = new Map();//Key = character, Value = Number of Times it is used in candidateWords
-            const maxDiff: number = this.highestCharDifference(candidateWords);
-            if (maxDiff == 1 || maxDiff == 2) {
+            if (this.charDiffAtMost2(this.candidateWords)) {
                 //Calculate at which index they differ
                 for (let i = 0; i < 5; i++) {
-                    if (this.hasDifferenCharAt(i, candidateWords)) {
-                        for (const s of candidateWords) {
+                    if (this.hasDifferenCharAt(i, this.candidateWords)) {
+                        for (const s of this.candidateWords) {
                             const c = s.charAt(i);
                             const currentCount = (charFrequency.get(c) || 0) + 1;; //If Element isnt in charFrequency yet it should be inserted with count=1
                             charFrequency.set(c, currentCount);
@@ -49,7 +50,7 @@ export class WordleSolver {
                 }
                 //Calculate Score based on how often chars of word appear in the rest of candidateWords
                 let bestCurrentScore = 0;
-                let bestCurrentWord = candidateWords[0] ?? ""; //Gute Lösung?
+                let bestCurrentWord = this.candidateWords[0] ?? ""; //Gute Lösung?
                 for (const s of this.words) {//search for word that eliminates most words of candidates
                     let currentScore = 0;
                     let uniqueLettersWord: Set<String> = new Set(s.split(""));
@@ -64,8 +65,8 @@ export class WordleSolver {
                         bestCurrentWord = s;
                     }
                 }
-                const explanationString = "The word-candidates are: "+ candidateWords.toString()
-                    + "To eradicate the " + candidateWords.length
+                const explanationString = "The word-candidates are: "+ this.candidateWords.toString()
+                    + "To eradicate the " + this.candidateWords.length
                     + " choices left, the word should contain the chars: "
                     + Array.from(charFrequency.keys())
                     + " So the best word is: "
@@ -78,13 +79,13 @@ export class WordleSolver {
         let charFrequency: Map<string, number> = new Map();
         let maxScore = 0;
         for (let i = 0; i < 5; i++) {
-            for (const s of candidateWords) {
+            for (const s of this.candidateWords) {
                 let c = s.charAt(i);
                 const currentCount = (charFrequency.get(c) || 0) + 1;; //If Element isnt in charFrequency yet it should be inserted with count=1
                 charFrequency.set(c, currentCount);
             }
         }
-        for (const s of candidateWords) {
+        for (const s of this.candidateWords) {
             let currentScore = 0;
             let alreadyUsed = new Set<string>;
             for (let i = 0; i < 5; i++) {
@@ -108,40 +109,38 @@ export class WordleSolver {
     }
 
 
-
-
-
-    getCandidateWords(): string[] { //returns a list of all words that match the current criteria
+    setCandidateWords(){ //returns a list of all words that match the current criteria
         let acceptableWords: string[] = [];
-        for (const s of this.words) {
+        for (const s of this.candidateWords) {
             if (!this.hasGreyLetters(s) && this.matchesGreenPatern(s) && this.matchesOrangePatterns(s)) {
                 acceptableWords.push(s);
             }
         }
-        return acceptableWords;
+        this.candidateWords = acceptableWords;
     }
 
-    highestCharDifference(strings: string[]): number {//return the biggest char-diff from a given String-List (for the algorithm do determine its strategy)
-        let biggestDiff = 0;
+    charDiffAtMost2(strings: string[]): boolean {//return the biggest char-diff from a given String-List (for the algorithm do determine its strategy)
         for (let i = 0; i < strings.length; i++) {
+            const a = strings[i];
             for (let j = i + 1; j < strings.length; j++) {
-                const diff = this.charDifferenceStrings(strings[i]!, strings[j]!);
-                if (diff == 5) { return 5; } //Since all Words are Length 5 the max Difference of Chars can be 5 so we can return it here
-                if (diff > biggestDiff) {
-                    biggestDiff = diff;
+                const b = strings[j];
+                let diff = 0;
+                for (let k = 0; k < 5; k++) {
+                    if(a![k] != b![k]) {
+                        diff++;
+                        if(diff > 2){
+                            return false;
+                        }
+                    }
                 }
             }
         }
-        return biggestDiff;
+        return true;
     }
 
     charDifferenceStrings(a: String, b: String): number { //return the char-Diff of two Strings a and b
         let diff = 0;
-        for (let i = 0; i < a.length; i++) {
-            if (a[i] != b[i]) {
-                diff++;
-            }
-        }
+
         return diff;
     }
 
@@ -161,6 +160,8 @@ export class WordleSolver {
         }
         return false; //No Difference of Chars at Index index
     }
+
+
 
     addGreyLetter(c: string): void {
         this.greyLetters.push(c.toUpperCase());
@@ -246,6 +247,24 @@ export class WordleSolver {
 
     getRandomNumber(min: number, max: number):number {
         return Math.floor(Math.random()*(max-min+1)) + min;
+    }
+
+    addWord(word: string, types: string[]):void{
+        if(word.length != 5 || types.length != 5){
+            return;
+        }
+
+        for(let i = 0; i < word.length; i++){
+            if(types[i] == "green"){
+                this.addGreenLetter(i,word.charAt(i));
+            }
+            if(types[i] == "orange"){
+                this.addOrangeLetter(i,word.charAt(i));
+            }
+            if(types[i] == "grey"){
+                this.addGreyLetter(word.charAt(i));
+            }
+        }
     }
 
 }

@@ -28,10 +28,10 @@ export class WordleSolverUI{
                 this.resetGameSolver();
                 return;
             }
-            this.addLettersFromBoxes(); //Adds Letters from letterBox1-5 to the appropriate list in solver
+            this.addWordToSolver(); //Adds Letters from letterBox1-5 to the appropriate list in solver
 
             try{
-                this.addBestWord(this.currentRow+1);        //Adds the new best word to the fields and sets their color to undefined
+                this.addBestWordToUI(this.currentRow+1);        //Adds the new best word to the fields and sets their color to undefined
                 this.currentRow++;
             }
             catch(err){
@@ -45,8 +45,8 @@ export class WordleSolverUI{
     }
 
     updateUISolver(): void{
-        this.addLettersFromBoxes(); //Adds Letters from letterBox1-5 to the appropriate list in solver
-        this.addBestWord(this.currentRow+1);         //Adds the new best word to the fields and sets their color to undefined
+        this.addWordToSolver(); //Adds Letters from letterBox1-5 to the appropriate list in solver
+        this.addBestWordToUI(this.currentRow+1);         //Adds the new best word to the fields and sets their color to undefined
     }
 
     private addChangeColorOnClick(letterBox: HTMLDivElement, textBoxNumber: number) :void{
@@ -79,7 +79,7 @@ export class WordleSolverUI{
         this.removeTypeOfBoxes(0,30);
     }
 
-    private addLettersFromBoxes():void {
+    private addWordToSolver():void { //adds words into
         const rowLetterBoxes: HTMLDivElement[] = this.letterBoxes.slice(this.currentRow*5, (this.currentRow+1)*5);
         let i: number = 0;//Index of current Box
         for(const currLetterBox of rowLetterBoxes){
@@ -107,7 +107,8 @@ export class WordleSolverUI{
         }
     }
 
-    private addBestWord(row: number): void{//Adds best word in row row
+
+    private addBestWordToUI(row: number): void{//Adds best word in row row
         //Check ob das Ergebnis wirklich nur 5 chars hat, evtl erklärung zu eliminierung der Kandidaten
         let bestWord: string = this.solver.findBestWord();
         if(bestWord.length != 5){//word wasnt found, resets game
@@ -136,7 +137,7 @@ export class WordleSolverUI{
         this.solver = new WordleSolver();
         this.clearBoxes();//clearsletters and types from boxes
         this.currentRow = 0;
-        this.addBestWord(this.currentRow);
+        this.addBestWordToUI(this.currentRow);
     }
 
     isGameWon():boolean{

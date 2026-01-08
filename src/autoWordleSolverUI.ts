@@ -1,11 +1,15 @@
 import {WordleGameUI} from "./wordleGameUI";
-import { WordleSolverUI } from "./WordleSolverUI";
+import { WordleSolverUI } from "./wordleSolverUI";
 
-export class AutomaticWordleSolver{
+
+export class AutoWordleSolverUI{
+
 
     private gameUI: WordleGameUI;
     private solverUI: WordleSolverUI;
     private autoGameButton: HTMLButtonElement;
+
+
 
     constructor(gameUI: WordleGameUI, solverUI: WordleSolverUI){
         this.gameUI = gameUI;
@@ -15,10 +19,10 @@ export class AutomaticWordleSolver{
     }
 
     private initListeners(){
-        this.autoGameButton.addEventListener("click", async() => await this.playAutomaticGame());
+        this.autoGameButton.addEventListener("click", async() => await this.playAutomaticGameUI());
     }
 
-    async playAutomaticGame(){
+    async playAutomaticGameUI(){
         this.autoGameButton.classList.add("deactivated-box");
         while(true){
             const rowBoxesGame = this.gameUI.getCurrentRowBoxes();
@@ -35,7 +39,8 @@ export class AutomaticWordleSolver{
             if(this.gameUI.isGameWon()){
                 this.autoGameButton.classList.remove("deactivated-box");
                 const score = this.gameUI.getCurrentRow()+1;
-                window.alert("Game won in " + score + " tries");
+                const targetWord = this.gameUI.getTargetWord();
+                window.alert("Game with target Word " + targetWord + " beat in " + score + " tries");
                 this.resetAutomaticGame();
                 return;                     //Add Code here when game is won
             }
@@ -66,13 +71,9 @@ export class AutomaticWordleSolver{
         }
     }
 
-
-
-
     private sleep(ms: number) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
-
 
     private resetAutomaticGame(){
         this.gameUI.resetGame();

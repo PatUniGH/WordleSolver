@@ -165,6 +165,10 @@ export class WordleGameUI{
         return true;
     }
 
+    getTargetWord(){
+        return this.wordle.getTargetWord();
+    }
+
     getLetterBoxes(){
         return this.letterBoxes;
     }
