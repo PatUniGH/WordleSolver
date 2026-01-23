@@ -13,29 +13,47 @@ export class Simulator{
     }
 
 
-    simulateGame(): {score: number, targetWord: string}{
+    simulateGame(startingWord: string, targetWord:string): {score: number, targetWord: string}{
+        this.resetSimulator();
         let score: number = 1;
+        if(targetWord != ""){
+            this.wordle = new Wordle(targetWord);
+        }
+        if(startingWord != ""){
+            const types: string[] = this.wordle.getTypeForInputs(startingWord);
+            this.solver.addWord(startingWord, types);
+            if(this.allTypesGreen(types)){
+                //Game won
+                const targetWord = this.wordle.getTargetWord();
+                this.resetSimulator();
+                return {score, targetWord};
+            }
+            score++;
+        }
+
         while(true){
             const currentSolverWord: string = this.solver.findBestWord();
             const types: string[] = this.wordle.getTypeForInputs(currentSolverWord);
 
-            if(this.isSimulationWon(types)){
+            if(this.allTypesGreen(types)){
+                //Game won
                 const targetWord = this.wordle.getTargetWord();
-                this.resetAutomaticGameNoUI();
+                this.resetSimulator();
                 return {score, targetWord};
             }
+
             this.solver.addWord(currentSolverWord, types);
             score++;
         }
     }
 
 
-    private resetAutomaticGameNoUI(){
+    private resetSimulator(){
         this.wordle = new Wordle("");
         this.solver = new WordleSolver();
     }
 
-    private isSimulationWon(types: string[]): boolean{
+    private allTypesGreen(types: string[]): boolean{
         for(const type of types){
             if(type != "green"){
                 return false;

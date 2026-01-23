@@ -25,7 +25,7 @@ export class Wordle {
         let targetLetters = this.targetWord.toLowerCase().split('');
 
         if(input.length != 5){
-            throw new Error("Invalid character in input");
+            throw new Error("Invalid character in input, length: " + input.length);
         }
 
         // First pass: mark all green letters and remove them from available letters

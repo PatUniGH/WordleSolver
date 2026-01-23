@@ -16,8 +16,8 @@ export class WordleSolver {
 
 
     constructor() {
-        this.words = [...fiveLetterWords];
-        this.candidateWords = this.words;
+        this.words = [...fiveLetterWords].map(w => w.toLowerCase());
+        this.candidateWords = [...fiveLetterWords].map(w => w.toLowerCase());
         this.assembleOrangeLettersMap();
     }
 
@@ -31,8 +31,11 @@ export class WordleSolver {
 
     findBestWord(): string {//returns the best word for solving the wordle considering current criteria
 
-        let bestString = "";
         this.setCandidateWords();
+        if(this.candidateWords.length == this.words.length){ //this only happens in the first iteration and slate is the best starting word so it should be given out
+            return "slate";
+        }
+        let bestString = this.candidateWords[0] || "";
 
         //If there are more than 2 candidate words that all are either only different by 1 or 2 chars, its strategically better to guess a word that isnt a cadidate but eliminates the max. number of candidates
         if (this.candidateWords.length > 2) {
@@ -71,7 +74,7 @@ export class WordleSolver {
                     + Array.from(charFrequency.keys())
                     + " So the best word is: "
                     + bestCurrentWord;
-                console.log(explanationString);
+                //console.log(explanationString);
                 return bestCurrentWord;
             }
         }
@@ -89,14 +92,14 @@ export class WordleSolver {
             let currentScore = 0;
             let alreadyUsed = new Set<string>;
             for (let i = 0; i < 5; i++) {
-                if (this.isValidChar(s.charAt(i))) {//char is letter from A-Z or a-z
-                    if (alreadyUsed.has(s.charAt(i))) {
+                const currentChar = s.charAt(i).toLowerCase();
+                if (this.isValidChar(currentChar)) {//char is letter from A-Z or a-z
+                    if (alreadyUsed.has(currentChar)) {
                         //double chars arent considered so no score+ is given
                     }
                     else {
-                        currentScore += charFrequency.get(s.charAt(i)) || 0;
-                        alreadyUsed.add(s.charAt(i).toUpperCase());
-                        alreadyUsed.add(s.charAt(i).toLowerCase());
+                        currentScore += charFrequency.get(currentChar) || 0;
+                        alreadyUsed.add(currentChar);
                     }
                 }
             }
@@ -112,11 +115,21 @@ export class WordleSolver {
     setCandidateWords(){ //returns a list of all words that match the current criteria
         let acceptableWords: string[] = [];
         for (const s of this.candidateWords) {
-            if (!this.hasGreyLetters(s) && this.matchesGreenPatern(s) && this.matchesOrangePatterns(s)) {
+            if (this.matchesGreenPatern(s) && this.matchesOrangePatterns(s) && this.matchesGreyPatterns(s)) {
                 acceptableWords.push(s);
             }
         }
+
+        if (acceptableWords.length === 0) {
+            console.warn("ACHTUNG: acceptableWords ist leer");
+            console.log("greyLetters:", this.greyLetters);
+            console.log("greenLetters:", this.greenLetters);
+            console.log("orangeLetters:", this.orangeLetters);
+        }
+
         this.candidateWords = acceptableWords;
+
+
     }
 
     charDiffAtMost2(strings: string[]): boolean {//return the biggest char-diff from a given String-List (for the algorithm do determine its strategy)
@@ -161,56 +174,55 @@ export class WordleSolver {
         return false; //No Difference of Chars at Index index
     }
 
-
-
-    addGreyLetter(c: string): void {
-        this.greyLetters.push(c.toUpperCase());
-        this.greyLetters.push(c.toLowerCase());
+    addGreyLetter(position: number, c: string): void {
+        const currentChar = c.toLowerCase();
+        if(!this.orangeLettersContainChar(currentChar) && !this.greenLettersContainChar(currentChar)){
+            this.greyLetters.push(currentChar);
+        }
+        else{
+            this.addOrangeLetter(position, currentChar);
+        }
     }
 
     addGreenLetter(position: number, c: String): void {
-        this.greenLetters.set(position, c.toUpperCase());
-        this.greenLetters.set(position - 100, c.toLowerCase());
+        this.greenLetters.set(position, c.toLowerCase());
     }
 
     addOrangeLetter(position: number, c: string): void {
+        const cLower = c.toLowerCase();
         if (position == 0) {
-            this.position0List.push(c.toUpperCase());
-            this.position0List.push(c.toLowerCase());
+            this.position0List.push(cLower);
         }
         if (position == 1) {
-            this.position1List.push(c.toUpperCase());
-            this.position1List.push(c.toLowerCase());
+            this.position1List.push(cLower);
         }
         if (position == 2) {
-            this.position2List.push(c.toUpperCase());
-            this.position2List.push(c.toLowerCase());
+            this.position2List.push(cLower);
         }
         if (position == 3) {
-            this.position3List.push(c.toUpperCase());
-            this.position3List.push(c.toLowerCase());
+            this.position3List.push(cLower);
         }
         if (position == 4) {
-            this.position4List.push(c.toUpperCase());
-            this.position4List.push(c.toLowerCase());
+            this.position4List.push(cLower);
         }
     }
 
-    hasGreyLetters(s: string): boolean { //checks if string s contains grey Letters
+    matchesGreyPatterns(s: string): boolean { //checks if string s contains grey Letters
         for (let i = 0; i < 5; i++) {
-            if (this.greyLetters.includes(s.charAt(i))) {
-                return true; //word contains forbidden (grey) char
+            const currentChar = s.charAt(i).toLowerCase();
+            if (this.greyLetters.includes(currentChar)) {
+                return false; //word contains forbidden (grey) char
             }
         }
-        return false; //word doesnt contain grey char
+        return true; //word doesnt contain grey char
     }
 
     matchesGreenPatern(s: string): boolean { //checks if green letters are in word at right position
         if (this.greenLetters.size == 0) { return true; }
         for (let i = 0; i < 5; i++) {
-            const currentChar = s.charAt(i);
+            const currentChar = s.charAt(i).toLowerCase();
             if (!(this.greenLetters.get(i) == null)) {
-                if (!(currentChar == this.greenLetters.get(i) || currentChar == this.greenLetters.get(i - 100))) { //Lower-Case numbers are safed at i-100
+                if (!(currentChar == this.greenLetters.get(i))) {
                     return false; //char is different from green char at position
                 }
             }
@@ -221,7 +233,7 @@ export class WordleSolver {
     matchesOrangePatterns(s: string): boolean { //checks if word matches orange pattern
         //Step 1: Check if chars are on a position where they should not be (where the field is orange)
         for (let i = 0; i < 5; i++) {
-            const currentChar = s.charAt(i);
+            const currentChar = s.charAt(i).toLowerCase();
             if ((this.orangeLetters.get(i) ?? []).includes(currentChar)) { //orange Letters.get(i) can't be undefined because from i = 0,..,4 it includes the lists that entail the orange letters at that position
                 return false;
             }
@@ -235,14 +247,32 @@ export class WordleSolver {
             ...this.position4List]));
 
         for (const c of allOrangeLetters) {
-            const currentCharUpper = c.toUpperCase();
             const currentCharLower = c.toLowerCase();
 
-            if (!(s.includes(currentCharUpper) || s.includes(currentCharLower))) {
+            if (!(s.includes(currentCharLower))) {
                 return false; //Not all orange Letters are included in word
             }
         }
         return true;
+    }
+
+
+    orangeLettersContainChar(c: string):boolean{
+        for(const list of this.orangeLetters.values()){
+            if(list.includes(c.toLowerCase())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    greenLettersContainChar(c: string): boolean{
+        for(const cLetters of this.greenLetters.values()){
+            if(c == cLetters){
+                return true;
+            }
+        }
+        return false;
     }
 
     getRandomNumber(min: number, max: number):number {
@@ -254,15 +284,22 @@ export class WordleSolver {
             return;
         }
 
+        //Damit das richtig funktioniert müssen graue Buchstaben am ende eingefügt werden
+
         for(let i = 0; i < word.length; i++){
+            const currentChar = word.charAt(i).toLowerCase();
             if(types[i] == "green"){
-                this.addGreenLetter(i,word.charAt(i));
+                this.addGreenLetter(i,currentChar);
             }
             if(types[i] == "orange"){
-                this.addOrangeLetter(i,word.charAt(i));
+                this.addOrangeLetter(i,currentChar);
             }
+        }
+
+        for(let i = 0; i< word.length; i++){
+            const currentChar = word.charAt(i).toLowerCase();
             if(types[i] == "grey"){
-                this.addGreyLetter(word.charAt(i));
+                this.addGreyLetter(i,currentChar);
             }
         }
     }

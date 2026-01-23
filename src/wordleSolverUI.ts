@@ -101,7 +101,7 @@ export class WordleSolverUI{
                     }
                     j++;
                 }
-                this.solver.addGreyLetter(currChar);
+                this.solver.addGreyLetter(i,currChar);
             }
             i++;
         }
