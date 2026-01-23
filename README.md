@@ -27,5 +27,5 @@ Development server runs on `http://localhost:8000`.
 
 ```
 
-Continue adding constraints and calling `findBestWord()` until solved.
+
 
