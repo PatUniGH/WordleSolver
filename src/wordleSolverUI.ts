@@ -28,7 +28,7 @@ export class WordleSolverUI{
                 this.resetGameSolver();
                 return;
             }
-            this.addWordToSolver(); //Adds Letters from letterBox1-5 to the appropriate list in solver
+            this.addWordToSolver(); //Adds Letters from letterBox1-5 to the appropriate list in Solver
 
             try{
                 this.addBestWordToUI(this.currentRow+1);        //Adds the new best word to the fields and sets their color to undefined
